@@ -34,9 +34,71 @@ const PropertyAddForm = () => {
 		setMounted(true);
 	}, []);
 
-	const handleChange = () => {};
-	const handleAmenitiesChange = () => {};
-	const handleImageChange = () => {};
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+
+		// Check if nested property
+		if (name.includes('.')) {
+			const [outerKey, innerKey] = name.split('.');
+
+			setFields((prevFields) => ({
+				...prevFields,
+				[outerKey]: {
+					...prevFields[outerKey],
+					[innerKey]: value,
+				},
+			}));
+		} else {
+			// Not nested
+			setFields((prevFields) => ({
+				...prevFields,
+				[name]: value,
+			}));
+		}
+	};
+
+	const handleAmenitiesChange = (e) => {
+		const { value, checked } = e.target;
+
+		// Clone the current array
+		const updatedAmenites = [...fields.amenities];
+
+		if (checked) {
+			// Add value to array
+			updatedAmenites.push(value);
+		} else {
+			// Remove value from array
+			const index = updatedAmenites.indexOf(value);
+
+			if (index !== -1) {
+				updatedAmenites.splice(index, 1);
+			}
+		}
+
+		// Update state with updated array
+		setFields((prevFields) => ({
+			...prevFields,
+			amenities: updatedAmenites,
+		}));
+	};
+
+	const handleImageChange = (e) => {
+		const { files } = e.target;
+
+		// Clone images array
+		const updatedImages = [...fields.images];
+
+		// Add new files to the array
+		for (const file of files) {
+			updatedImages.push(file);
+		}
+
+		// Update state with array of images
+		setFields((prevFields) => ({
+			...prevFields,
+			images: updatedImages,
+		}));
+	};
 
 	return (
 		mounted && (
@@ -55,7 +117,7 @@ const PropertyAddForm = () => {
 						className='border rounded w-full py-2 px-3'
 						required
 						value={fields.type}
-						onChange={handlechange}
+						onChange={handleChange}
 					>
 						<option value='Apartment'>Apartment</option>
 						<option value='Condo'>Condo</option>
@@ -78,7 +140,7 @@ const PropertyAddForm = () => {
 						placeholder='eg. Beautiful Apartment In Miami'
 						required
 						value={fields.name}
-						onChange={handlechange}
+						onChange={handleChange}
 					/>
 				</div>
 				<div className='mb-4'>
@@ -95,7 +157,7 @@ const PropertyAddForm = () => {
 						rows='4'
 						placeholder='Add an optional description of your property'
 						value={fields.description}
-						onChange={handlechange}
+						onChange={handleChange}
 					></textarea>
 				</div>
 
@@ -108,7 +170,7 @@ const PropertyAddForm = () => {
 						className='border rounded w-full py-2 px-3 mb-2'
 						placeholder='Street'
 						value={fields.location.street}
-						onChange={handlechange}
+						onChange={handleChange}
 					/>
 					<input
 						type='text'
@@ -118,7 +180,7 @@ const PropertyAddForm = () => {
 						placeholder='City'
 						required
 						value={fields.location.city}
-						onChange={handlechange}
+						onChange={handleChange}
 					/>
 					<input
 						type='text'
@@ -128,7 +190,7 @@ const PropertyAddForm = () => {
 						placeholder='State'
 						required
 						value={fields.location.state}
-						onChange={handlechange}
+						onChange={handleChange}
 					/>
 					<input
 						type='text'
@@ -137,7 +199,7 @@ const PropertyAddForm = () => {
 						className='border rounded w-full py-2 px-3 mb-2'
 						placeholder='Zipcode'
 						value={fields.location.zipcode}
-						onChange={handlechange}
+						onChange={handleChange}
 					/>
 				</div>
 
