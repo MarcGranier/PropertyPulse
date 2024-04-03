@@ -407,9 +407,9 @@ const PropertyAddForm = () => {
 								type='checkbox'
 								id='amenity_air_conditioning'
 								name='amenities'
-								value=''
+								value='Air Conditioning'
 								className='mr-2'
-								checked={fields.amenities.includes('Air Conditioningi')}
+								checked={fields.amenities.includes('Air Conditioning')}
 								onChange={handleAmenitiesChange}
 							/>
 							<label htmlFor='amenity_air_conditioning'>Air Conditioning</label>
