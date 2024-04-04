@@ -6,7 +6,7 @@ import { fetchProperty } from '@/utils/requests';
 
 const PropertyEditForm = () => {
 	const { id } = useParams();
-	const router = useRouter;
+	const router = useRouter();
 
 	const [mounted, setMounted] = useState(false);
 	const [fields, setFields] = useState({
@@ -30,11 +30,10 @@ const PropertyEditForm = () => {
 		},
 		seller_info: {
 			name: '',
-			email: 'test@test.com',
+			email: '',
 			phone: '',
 		},
 	});
-
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -45,7 +44,7 @@ const PropertyEditForm = () => {
 			try {
 				const propertyData = await fetchProperty(id);
 
-				//Check rates for null, if so then make empty string
+				// Check rates for null, if so then make empty string
 				if (propertyData && propertyData.rates) {
 					const defaultRates = { ...propertyData.rates };
 					for (const rate in defaultRates) {
@@ -89,7 +88,6 @@ const PropertyEditForm = () => {
 			}));
 		}
 	};
-
 	const handleAmenitiesChange = (e) => {
 		const { value, checked } = e.target;
 
@@ -115,7 +113,29 @@ const PropertyEditForm = () => {
 		}));
 	};
 
-	const handleSubmit = async () => {};
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		try {
+			const formData = new FormData(e.target);
+
+			const res = await fetch(`/api/properties/${id}`, {
+				method: 'PUT',
+				body: formData,
+			});
+
+			if (res.status === 200) {
+				router.push(`/properties/${id}`);
+			} else if (res.status === 401 || res.status === 403) {
+				toast.error('Permission denied');
+			} else {
+				toast.error('Something went wrong');
+			}
+		} catch (error) {
+			console.log(error);
+			toast.error('Something went wrong');
+		}
+	};
 
 	return (
 		mounted &&
@@ -579,5 +599,4 @@ const PropertyEditForm = () => {
 		)
 	);
 };
-
 export default PropertyEditForm;
