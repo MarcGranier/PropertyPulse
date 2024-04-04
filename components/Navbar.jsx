@@ -215,6 +215,7 @@ const Navbar = () => {
 											id='user-menu-item-2'
 											onClick={() => {
 												setIsProfileMenuOpen(false);
+												signOut();
 											}}
 										>
 											Sign Out
