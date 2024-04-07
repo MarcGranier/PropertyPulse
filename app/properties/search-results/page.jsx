@@ -6,7 +6,7 @@ const SearchResultsPage = () => {
 	const searchParams = useSearchParams();
 
 	const [properties, setProperties] = useState([]);
-	const [loading, setLoading] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const location = searchParams.get('location');
 	const propertyType = searchParams.get('propertyType');
@@ -15,7 +15,7 @@ const SearchResultsPage = () => {
 		const fetchSearchResults = async () => {
 			try {
 				const res = await fetch(
-					`/api/properties/search?=${location}&propertyType=${propertyType}`
+					`/api/properties/search?location=${location}&propertyType=${propertyType}`
 				);
 
 				if (res.status === 200) {
