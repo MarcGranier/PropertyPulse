@@ -4,7 +4,7 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/messages
+/// GET /api/messages
 export const GET = async () => {
 	try {
 		await connectDB();
@@ -12,30 +12,16 @@ export const GET = async () => {
 		const sessionUser = await getSessionUser();
 
 		if (!sessionUser || !sessionUser.user) {
-			return new Response(
-				JSON.stringify('You must be logged in to send a message '),
-				{
-					status: 401,
-				}
-			);
+			return new Response(JSON.stringify('User ID is required'), {
+				status: 401,
+			});
 		}
 
 		const { userId } = sessionUser;
 
-		const readMessages = await Message.find({ recipient: userId, read: true })
-			.sort({ createdAt: -1 }) // Sort read messages in asc order
-			.populate('sender', 'username')
-			.populate('property', 'name');
-
-		const unreadMessages = await Message.find({
-			recipient: userId,
-			read: false,
-		})
-			.sort({ createdAt: -1 }) // Sort read messages in asc order
-			.populate('sender', 'username')
-			.populate('property', 'name');
-
-		const messages = [...unreadMessages, ...readMessages];
+		const messages = await Message.find({ recipient: userId })
+			.populate('sender', 'name')
+			.populate('property', 'title');
 
 		return new Response(JSON.stringify(messages), { status: 200 });
 	} catch (error) {
