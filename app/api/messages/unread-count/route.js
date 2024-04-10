@@ -4,8 +4,8 @@ import { getSessionUser } from '@/utils/getSessionUser';
 
 export const dynamic = 'force-dynamic';
 
-// Get /api/messages/unread-count
-export const PUT = async (request) => {
+// GET /api/messages/unread-count
+export const GET = async (request) => {
 	try {
 		await connectDB();
 
